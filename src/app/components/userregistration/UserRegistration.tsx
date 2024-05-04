@@ -9,6 +9,7 @@ import { defaultValues, resolver, UserSchema } from './userSchema';
 
 const ControlledFormTextInput = createControlledFormInput<TextInputProps, UserSchema>(TextInput, {
   classes: classes.textInput,
+  maxLength: 128,
   required: true
 });
 

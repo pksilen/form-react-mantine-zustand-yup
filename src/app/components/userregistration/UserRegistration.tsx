@@ -1,38 +1,18 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Button } from '@mantine/core';
-import { IconExclamationCircle } from '@tabler/icons-react';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { TextInput } from '../../common/components/presentational/TextInput';
-import useUserStore from '../../stores/userStore';
-import camelCaseIdentifierToWords from '../../utils/camelCaseIdentifierToWords';
+import { FieldPath, SubmitHandler, useForm } from 'react-hook-form';
+import { ErrorAlert } from '../../common/components/presentational/alerts/ErrorAlert';
+import { SubmitButton } from '../../common/components/presentational/buttons/SubmitButton';
+import { createControlledInput } from '../../common/components/presentational/factories/createControlledInput';
+import { TextInput, TextInputProps } from '../../common/components/presentational/input/TextInput';
+import { useUserStore } from '../../stores/userStore';
 import classes from './UserRegistration.module.scss';
+import { defaultValues, resolver, UserSchema } from './userSchema';
 
-const userSchema = yup
-  .object({
-    firstName: yup.string().required('First name is required'),
-    lastName: yup.string().required('Last name is required'),
-    streetAddress: yup.string().required('Street address is required'),
-    city: yup.string().required('City is required'),
-    zipCode: yup.string().required('Zip code is required'),
-    email: yup.string().email().required('Email is required'),
-    phoneNumber: yup.string().required('Phone number is required')
-  })
-  .required();
+const ControlledTextInput = createControlledInput<TextInputProps, UserSchema>(TextInput, {
+  classes: classes.textInput,
+  required: true
+});
 
-export type InputUser = yup.InferType<typeof userSchema>;
-
-const defaultValues = {
-  firstName: '',
-  lastName: '',
-  streetAddress: '',
-  zipCode: '',
-  city: '',
-  email: '',
-  phoneNumber: ''
-};
-
-export default function UserRegistration() {
+export const UserRegistration = () => {
   const error = useUserStore((store) => store.error);
   const createUser = useUserStore((store) => store.actions.createUser);
 
@@ -41,61 +21,35 @@ export default function UserRegistration() {
     formState: { errors },
     handleSubmit,
     reset
-  } = useForm<InputUser>({
-    defaultValues,
-    resolver: yupResolver(userSchema)
-  });
+  } = useForm<UserSchema>({ defaultValues, resolver });
 
-  const onSubmit: SubmitHandler<InputUser> = async (inputUser) => {
-    const didSucceed = await createUser(inputUser);
+  const onSubmit: SubmitHandler<UserSchema> = async (user) => {
+    const didSucceed = await createUser(user);
 
     if (didSucceed) {
       reset();
     }
   };
 
-  const createInput = (name: keyof InputUser) => (
-    <Controller
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <TextInput
-          classes={classes.textInput}
-          error={errors?.[name]?.message}
-          label={camelCaseIdentifierToWords(name)}
-          required
-          {...field}
-        />
-      )}
-    />
+  const createControlledTextInput = (name: FieldPath<UserSchema>) => (
+    <ControlledTextInput control={control} errors={errors} name={name} />
   );
 
   return (
     <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
-      <fieldset>
-        {createInput('lastName')}
-        {createInput('firstName')}
+      <fieldset className={classes.inline}>
+        {createControlledTextInput('firstName')}
+        {createControlledTextInput('lastName')}
       </fieldset>
-      {createInput('streetAddress')}
-      <fieldset>
-        {createInput('zipCode')}
-        {createInput('city')}
+      {createControlledTextInput('streetAddress')}
+      <fieldset className={classes.inline}>
+        {createControlledTextInput('zipCode')}
+        {createControlledTextInput('city')}
       </fieldset>
-      {createInput('email')}
-      {createInput('phoneNumber')}
-      <Button size="large" type="submit">
-        Register
-      </Button>
-      {error && (
-        <Alert
-          className={classes.alert}
-          color="red"
-          icon={<IconExclamationCircle />}
-          variant="filled"
-        >
-          Registration failed. Please try again.
-        </Alert>
-      )}
+      {createControlledTextInput('email')}
+      {createControlledTextInput('phoneNumber')}
+      <SubmitButton>Register</SubmitButton>
+      {error && <ErrorAlert>Registration failed. Please try again.</ErrorAlert>}
     </form>
   );
-}
+};

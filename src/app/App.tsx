@@ -1,15 +1,15 @@
 import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
-import classNames from './App.module.scss';
-import UserList from './components/userlist/UserList';
-import UserRegistration from './components/userregistration/UserRegistration';
+import classes from './App.module.scss';
+import { UserList } from './components/userlist/UserList';
+import { UserRegistration } from './components/userregistration/UserRegistration';
 
 export default function App() {
   return (
     <MantineProvider defaultColorScheme="dark">
-      <main className={classNames.container}>
+      <main className={classes.main}>
         <UserRegistration />
-        <div className={classNames.verticalDivider}></div>
+        <div className={classes.verticalDivider}></div>
         <UserList />
       </main>
     </MantineProvider>

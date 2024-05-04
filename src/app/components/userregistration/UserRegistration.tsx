@@ -1,13 +1,13 @@
 import { FieldPath, SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorAlert } from '../../common/components/presentational/alerts/ErrorAlert';
 import { SubmitButton } from '../../common/components/presentational/buttons/SubmitButton';
-import { createControlledInput } from '../../common/components/presentational/factories/createControlledInput';
+import { createControlledFormInput } from '../../common/components/presentational/factories/createControlledFormInput';
 import { TextInput, TextInputProps } from '../../common/components/presentational/input/TextInput';
 import { useUserStore } from '../../stores/userStore';
 import classes from './UserRegistration.module.scss';
 import { defaultValues, resolver, UserSchema } from './userSchema';
 
-const ControlledTextInput = createControlledInput<TextInputProps, UserSchema>(TextInput, {
+const ControlledFormTextInput = createControlledFormInput<TextInputProps, UserSchema>(TextInput, {
   classes: classes.textInput,
   required: true
 });
@@ -31,23 +31,23 @@ export const UserRegistration = () => {
     }
   };
 
-  const createControlledTextInput = (name: FieldPath<UserSchema>) => (
-    <ControlledTextInput control={control} errors={errors} name={name} />
+  const createTextInput = (name: FieldPath<UserSchema>) => (
+    <ControlledFormTextInput control={control} errors={errors} name={name} />
   );
 
   return (
     <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
       <fieldset className={classes.inline}>
-        {createControlledTextInput('firstName')}
-        {createControlledTextInput('lastName')}
+        {createTextInput('firstName')}
+        {createTextInput('lastName')}
       </fieldset>
-      {createControlledTextInput('streetAddress')}
+      {createTextInput('streetAddress')}
       <fieldset className={classes.inline}>
-        {createControlledTextInput('zipCode')}
-        {createControlledTextInput('city')}
+        {createTextInput('zipCode')}
+        {createTextInput('city')}
       </fieldset>
-      {createControlledTextInput('email')}
-      {createControlledTextInput('phoneNumber')}
+      {createTextInput('email')}
+      {createTextInput('phoneNumber')}
       <SubmitButton>Register</SubmitButton>
       {error && <ErrorAlert>Registration failed. Please try again.</ErrorAlert>}
     </form>

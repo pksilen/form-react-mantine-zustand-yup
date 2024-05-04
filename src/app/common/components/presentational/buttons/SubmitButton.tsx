@@ -3,6 +3,11 @@ import React from 'react';
 
 type Props = {
   children: React.ReactNode;
+  className?: string;
 };
 
-export const SubmitButton = ({ children }: Props) => <Button type="submit">{children}</Button>;
+export const SubmitButton = ({ children, className }: Props) => (
+  <Button className={className} type="submit">
+    {children}
+  </Button>
+);

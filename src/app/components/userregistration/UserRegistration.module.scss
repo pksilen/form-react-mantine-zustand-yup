@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
 
-  fieldset.inline {
+  .inlineFields {
     display: flex;
     gap: 20px;
   }
@@ -11,8 +11,12 @@
     margin-bottom: 20px;
   }
 
+  .button {
+    margin-top: 10px;
+  }
+
   .alert {
-    margin-top: 20px;
+    margin-top: 30px;
   }
 }
 

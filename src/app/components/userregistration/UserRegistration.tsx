@@ -37,19 +37,21 @@ export const UserRegistration = () => {
 
   return (
     <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
-      <fieldset className={classes.inline}>
+      <fieldset className={classes.inlineFields}>
         {createTextInput('firstName')}
         {createTextInput('lastName')}
       </fieldset>
       {createTextInput('streetAddress')}
-      <fieldset className={classes.inline}>
+      <fieldset className={classes.inlineFields}>
         {createTextInput('zipCode')}
         {createTextInput('city')}
       </fieldset>
       {createTextInput('email')}
       {createTextInput('phoneNumber')}
-      <SubmitButton>Register</SubmitButton>
-      {error && <ErrorAlert>Registration failed. Please try again.</ErrorAlert>}
+      <SubmitButton className={classes.button}>Register</SubmitButton>
+      {error && (
+        <ErrorAlert className={classes.alert}>Registration failed. Please try again.</ErrorAlert>
+      )}
     </form>
   );
 };

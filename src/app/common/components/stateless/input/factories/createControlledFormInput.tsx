@@ -1,6 +1,6 @@
 import React from 'react';
 import { Control, Controller, FieldErrors, FieldPath, FieldValues } from 'react-hook-form';
-import camelCaseIdentifierToWords from '../../../../utils/camelCaseIdentifierToWords';
+import { camelCaseIdentifierToWords } from 'app/utils/camelCaseIdentifierToWords';
 
 export const createControlledFormInput =
   <TInputProps, TFormSchema extends FieldValues>(
@@ -8,21 +8,21 @@ export const createControlledFormInput =
     boundInputProps: TInputProps
   ) =>
   ({
-    control,
-    errors,
-    name
+    formControl,
+    formErrors,
+    formFieldName
   }: {
-    control: Control<TFormSchema>;
-    errors: FieldErrors<TFormSchema>;
-    name: FieldPath<TFormSchema>;
+    formControl: Control<TFormSchema>;
+    formErrors: FieldErrors<TFormSchema>;
+    formFieldName: FieldPath<TFormSchema>;
   }) => (
     <Controller
-      control={control}
-      name={name}
+      control={formControl}
+      name={formFieldName}
       render={({ field }) => (
         <InputComponent
-          error={errors?.[name]?.message}
-          label={camelCaseIdentifierToWords(name)}
+          error={formErrors?.[formFieldName]?.message}
+          label={camelCaseIdentifierToWords(formFieldName)}
           {...boundInputProps}
           {...field}
         />

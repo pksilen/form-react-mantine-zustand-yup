@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { UserSchema } from '../components/userregistration/userSchema';
+import { UserSchema } from '../components/userregistrationform/userSchema';
 import { userService } from '../services/FakeUserService';
 import { User } from './User';
 
@@ -9,7 +9,7 @@ type State = {
 };
 
 type Actions = {
-  createUser: (user: UserSchema) => Promise<boolean>;
+  registerUser: (user: UserSchema) => Promise<boolean>;
   fetchUsers: () => Promise<void>;
 };
 
@@ -20,19 +20,18 @@ export const useUserStore = create<UserStore>()((setState, getState) => ({
   users: [],
 
   actions: {
-    createUser: async (user: UserSchema) => {
-      let didSucceed = true;
+    registerUser: async (user: UserSchema) => {
+      let registeredUser: User | undefined;
 
       try {
-        const createdUser = await userService.createUser(user);
-        setState({ error: null, users: [...getState().users, createdUser] });
+        registeredUser = await userService.registerUser(user);
+        setState({ error: null, users: [...getState().users, registeredUser] });
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         setState({ error });
-        didSucceed = false;
       }
 
-      return didSucceed;
+      return !!registeredUser;
     },
 
     fetchUsers: async () => {

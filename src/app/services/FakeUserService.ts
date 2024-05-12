@@ -8,8 +8,9 @@ class FakeUserService implements UserService {
 
   registerUser(user: UserSchema): Promise<User> {
     const registeredUser = { id: uuidv4(), ...user };
+    const isTest = window.location.href.includes('test');
 
-    if (Math.random() < 0.7) {
+    if ((isTest && !window.location.href.includes('fail')) || (!isTest && Math.random() < 0.7)) {
       this.users.push(registeredUser);
       return Promise.resolve(registeredUser);
     }
